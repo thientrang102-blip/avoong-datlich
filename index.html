@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt Lịch — A Vòong Hair Salon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brown: #8B4513;
+      --brown-dark: #6b3410;
+      --brown-light: #c4845a;
+      --gold: #C9A96E;
+      --gold-light: #e8d5b0;
+      --cream: #f9f5f0;
+      --cream-dark: #f0e8d8;
+      --cream-mid: #e8ddd0;
+      --text: #2c1a0e;
+      --text-mid: #5a3e2b;
+      --text-light: #9a7a65;
+      --white: #ffffff;
+      --black: #0d0d0d;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background-color: var(--black);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(201,169,110,0.2);
+    }
+
+    .header-logo img {
+      height: 36px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .header-nav a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover { color: var(--gold); }
+
+    .header-cta {
+      background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 500 !important;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      padding: 5px 12px;
+      border: none;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .lang-btn.active { background: var(--brown); color: white; }
+    .lang-btn:hover:not(.active) { color: white; background: rgba(255,255,255,0.1); }
+
+    /* ===== PAGE TITLE ===== */
+    .page-title-bar {
+      background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+      padding: 32px 48px;
+    }
+
+    .page-title-bar h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+
+    .page-title-bar p {
+      color: rgba(255,255,255,0.65);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ===== LAYOUT ===== */
+    .page-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 48px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ===== FORM CARD ===== */
+    .form-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 2px 24px rgba(139,69,19,0.07);
+    }
+
+    .form-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .form-card-sub {
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: 300;
+      margin-bottom: 32px;
+    }
+
+    .required-note {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 28px;
+    }
+
+    .required-note span { color: #c0392b; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 22px; }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-mid);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .form-group label .req { color: #c0392b; margin-left: 2px; }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--cream-mid);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--cream);
+      outline: none;
+      transition: all 0.2s;
+      appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--brown);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(139,69,19,0.08);
+    }
+
+    .form-group input.error,
+    .form-group select.error { border-color: #c0392b; background: #fff8f8; }
+
+    .form-group textarea { resize: none; height: 88px; }
+
+    .error-msg { font-size: 11px; color: #c0392b; margin-top: 5px; display: none; }
+
+    /* COUNTER */
+    .counter-wrap {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--cream-mid);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--cream);
+      transition: border-color 0.2s;
+    }
+
+    .counter-wrap:focus-within { border-color: var(--brown); background: white; }
+
+    .counter-btn {
+      width: 44px; height: 46px;
+      border: none; background: transparent;
+      font-size: 20px; cursor: pointer;
+      color: var(--text-mid); transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .counter-btn:hover { background: var(--cream-dark); color: var(--brown); }
+
+    .counter-val {
+      flex: 1; text-align: center;
+      font-size: 15px; font-weight: 500;
+      color: var(--text); border: none;
+      background: transparent; outline: none;
+    }
+
+    /* DIVIDER */
+    .section-divider { border: none; border-top: 1px solid var(--cream-dark); margin: 28px 0; }
+
+    .section-label {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-mid); letter-spacing: 1.5px;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    /* SERVICE — 2 cols only */
+    .service-entry {
+      background: var(--cream); border-radius: 12px;
+      padding: 16px; margin-bottom: 12px;
+      border: 1px solid var(--cream-mid);
+    }
+
+    .service-entry-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 36px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .service-entry select {
+      padding: 10px 12px;
+      border: 1.5px solid var(--cream-mid);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; color: var(--text);
+      background: white; outline: none;
+      cursor: pointer; transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .service-entry select:focus { border-color: var(--brown); }
+
+    .btn-remove-service {
+      width: 32px; height: 32px;
+      border: none; background: #fff0f0;
+      color: #c0392b; border-radius: 8px;
+      cursor: pointer; font-size: 16px;
+      display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s;
+    }
+
+    .btn-remove-service:hover { background: #ffd6d6; }
+
+    .btn-add-service {
+      display: inline-flex; align-items: center;
+      gap: 6px; padding: 10px 18px;
+      border: 1.5px dashed var(--brown-light);
+      border-radius: 10px; background: transparent;
+      color: var(--brown); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; margin-top: 4px;
+    }
+
+    .btn-add-service:hover { background: #fdf8f4; border-style: solid; }
+
+    /* TIME GRID */
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px; margin-top: 12px;
+    }
+
+    .time-btn {
+      padding: 10px 6px;
+      border: 1.5px solid var(--cream-mid);
+      border-radius: 8px; background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; color: var(--text-mid);
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+
+    .time-btn:hover { border-color: var(--brown-light); background: #fdf8f4; color: var(--brown); }
+    .time-btn.selected { background: var(--brown); border-color: var(--brown); color: white; font-weight: 500; }
+
+    /* SUBMIT */
+    .btn-submit {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+      color: white; border: none; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px; font-weight: 600;
+      letter-spacing: 1px; cursor: pointer;
+      transition: all 0.3s; margin-top: 28px;
+      position: relative; overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: ''; position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-submit:hover::before { left: 100%; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,69,19,0.35); }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    /* Khối 1 */
+    .salon-info-card {
+      background: white; border-radius: 16px;
+      padding: 20px; box-shadow: 0 2px 16px rgba(139,69,19,0.07);
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    .salon-logo-box {
+      width: 80px; height: 80px;
+      border-radius: 12px; overflow: hidden;
+      flex-shrink: 0; background: var(--black);
+    }
+
+    .salon-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    .salon-info-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--text); margin-bottom: 8px;
+    }
+
+    .salon-info-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .salon-info-row .icon { font-size: 13px; color: var(--gold); }
+    .salon-info-row span { font-size: 13px; color: var(--text-mid); }
+    .salon-info-row strong { color: var(--text); font-weight: 600; }
+
+    /* Khối 2 */
+    .salon-banner { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .salon-banner img { width: 100%; display: block; object-fit: cover; }
+
+    /* Khối 3 */
+    .salon-desc-card {
+      background: white; border-radius: 16px;
+      padding: 24px; box-shadow: 0 2px 16px rgba(139,69,19,0.07);
+    }
+
+    .salon-desc-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--text); line-height: 1.4;
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+
+    .desc-item { margin-bottom: 12px; padding-left: 12px; border-left: 2px solid var(--gold); }
+    .desc-item p { font-size: 13px; color: var(--text-mid); line-height: 1.7; font-weight: 300; }
+    .desc-item strong { color: var(--brown); font-weight: 600; }
+
+    /* Khối 4 — Google Map */
+    .map-card {
+      background: white; border-radius: 16px;
+      padding: 20px; box-shadow: 0 2px 16px rgba(139,69,19,0.07);
+    }
+
+    .map-label {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-mid); letter-spacing: 1.5px;
+      text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .map-label span { color: var(--gold); }
+
+    .map-frame {
+      width: 100%; height: 220px;
+      border-radius: 12px; overflow: hidden;
+      border: none; display: block;
+    }
+
+    .btn-view-map {
+      display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+      width: 100%; margin-top: 12px;
+      padding: 11px;
+      border: 1.5px solid var(--brown);
+      border-radius: 10px;
+      color: var(--brown);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      background: transparent;
+    }
+
+    .btn-view-map:hover { background: var(--brown); color: white; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center;
+      justify-content: center; z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s; padding: 20px;
+    }
+
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: white; border-radius: 24px;
+      padding: 48px 40px; max-width: 440px;
+      width: 100%; text-align: center;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal-overlay.show .modal { transform: scale(1) translateY(0); }
+
+    .modal-check {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--brown), var(--gold));
+      border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 28px; color: white;
+      animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+    .modal h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px; font-weight: 700;
+      color: var(--text); margin-bottom: 8px;
+    }
+
+    .modal > p { font-size: 14px; color: var(--text-light); line-height: 1.7; margin-bottom: 24px; }
+
+    .modal-details { background: var(--cream); border-radius: 14px; padding: 20px; text-align: left; margin-bottom: 28px; }
+
+    .modal-detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--cream-dark); gap: 12px; }
+    .modal-detail-row:last-child { border-bottom: none; }
+    .modal-detail-row .lbl { font-size: 12px; color: var(--text-light); font-weight: 500; flex-shrink: 0; }
+    .modal-detail-row .val { font-size: 13px; color: var(--text); font-weight: 500; text-align: right; }
+
+    .btn-close-modal {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+      color: white; border: none; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+
+    .btn-close-modal:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,69,19,0.3); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .page-body { grid-template-columns: 1fr; padding: 24px 20px; }
+      .sidebar { order: -1; }
+      header { padding: 0 20px; }
+      .header-nav { display: none; }
+      .page-title-bar { padding: 24px 20px; }
+      .form-card { padding: 28px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .time-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .time-grid { grid-template-columns: repeat(3, 1fr); }
+      .service-entry-row { grid-template-columns: 1fr 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a class="header-logo" href="#">
+      <img src="https://res.cloudinary.com/dpn19uqo2/image/upload/v1774165816/logo_A_Vo%CC%80ong_ngang_czncbu.png" alt="A Vòong Hair Salon">
+    </a>
+    <div class="header-right">
+      <ul class="header-nav">
+        <li><a href="#" data-vi="Trang chủ" data-en="Home">Trang chủ</a></li>
+        <li><a href="#" data-vi="Dịch vụ" data-en="Services">Dịch vụ</a></li>
+        <li><a href="#" data-vi="Đội ngũ" data-en="Team">Đội ngũ</a></li>
+        <li><a href="#" data-vi="Blog" data-en="Blog">Blog</a></li>
+        <li><a href="#" class="header-cta" data-vi="Đặt lịch" data-en="Book Now">Đặt lịch</a></li>
+      </ul>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('vi')">VI</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE TITLE -->
+  <div class="page-title-bar">
+    <h1 data-vi="Đặt Lịch Hẹn" data-en="Book Appointment">Đặt Lịch Hẹn</h1>
+    <p data-vi="11 Cây Keo, Phường Hiệp Tân, Quận Tân Phú, TP.HCM" data-en="11 Cay Keo, Hiep Tan Ward, Tan Phu District, HCMC">11 Cây Keo, Phường Hiệp Tân, Quận Tân Phú, TP.HCM</p>
+  </div>
+
+  <!-- BODY -->
+  <div class="page-body">
+
+    <!-- CỘT TRÁI: FORM -->
+    <div class="form-card">
+      <div class="form-card-title" data-vi="Thông tin đặt lịch" data-en="Booking Information">Thông tin đặt lịch</div>
+      <div class="form-card-sub" data-vi="Vui lòng điền đầy đủ thông tin để salon xác nhận lịch hẹn" data-en="Please fill in all information so the salon can confirm your appointment">Vui lòng điền đầy đủ thông tin để salon xác nhận lịch hẹn</div>
+      <div class="required-note"><span>*</span> <span data-vi="Trường bắt buộc" data-en="Required field">Trường bắt buộc</span></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>
+            <span data-vi="Số điện thoại" data-en="Phone Number">Số điện thoại</span>
+            <span class="req">*</span>
+          </label>
+          <input type="tel" id="phone" placeholder="0906 907 633" data-vi-ph="0906 907 633" data-en-ph="Phone number">
+          <div class="error-msg" id="err-phone" data-vi="Vui lòng nhập số điện thoại" data-en="Please enter your phone number">Vui lòng nhập số điện thoại</div>
+        </div>
+        <div class="form-group">
+          <label>
+            <span data-vi="Họ và tên" data-en="Full Name">Họ và tên</span>
+            <span class="req">*</span>
+          </label>
+          <input type="text" id="name" placeholder="Nguyễn Thị An" data-vi-ph="Nguyễn Thị An" data-en-ph="Your full name">
+          <div class="error-msg" id="err-name" data-vi="Vui lòng nhập họ và tên" data-en="Please enter your name">Vui lòng nhập họ và tên</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-vi="Tổng số khách" data-en="Number of Guests">Tổng số khách</label>
+          <div class="counter-wrap">
+            <button class="counter-btn" onclick="changeCount(-1)">−</button>
+            <input class="counter-val" type="number" id="guestCount" value="1" min="1" max="10" readonly>
+            <button class="counter-btn" onclick="changeCount(1)">+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+            <span data-vi="Chi nhánh" data-en="Branch">Chi nhánh</span>
+            <span class="req">*</span>
+          </label>
+          <select id="branch">
+            <option value="11-cay-keo" data-vi="11 Cây Keo, Hòa Thanh, Tân Phú" data-en="11 Cay Keo, Hoa Thanh, Tan Phu">11 Cây Keo, Hòa Thanh, Tân Phú</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span data-vi="Ngày đặt lịch" data-en="Appointment Date">Ngày đặt lịch</span>
+          <span class="req">*</span>
+        </label>
+        <input type="date" id="bookDate">
+        <div class="error-msg" id="err-date" data-vi="Vui lòng chọn ngày đặt lịch" data-en="Please select a date">Vui lòng chọn ngày đặt lịch</div>
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-label">
+        <span data-vi="Dịch vụ" data-en="Services">Dịch vụ</span>
+        <span class="req" style="color:#c0392b; margin-left:2px">*</span>
+      </div>
+
+      <div id="serviceList"></div>
+
+      <button class="btn-add-service" onclick="addService()">
+        + <span data-vi="Thêm dịch vụ" data-en="Add Service">Thêm dịch vụ</span>
+      </button>
+      <div class="error-msg" id="err-service" style="display:none; margin-top:8px" data-vi="Vui lòng chọn ít nhất 1 dịch vụ" data-en="Please select at least 1 service">Vui lòng chọn ít nhất 1 dịch vụ</div>
+
+      <hr class="section-divider">
+
+      <div class="form-group">
+        <label data-vi="Ghi chú" data-en="Notes">Ghi chú</label>
+        <textarea id="note" placeholder="Ví dụ: tóc dài ngang vai, muốn nhuộm màu nâu lạnh..." data-vi-ph="Ví dụ: tóc dài ngang vai, muốn nhuộm màu nâu lạnh..." data-en-ph="E.g: shoulder length hair, want ash brown color..."></textarea>
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-label">
+        <span data-vi="Chọn khung giờ" data-en="Select Time Slot">Chọn khung giờ</span>
+        <span class="req" style="color:#c0392b; margin-left:2px">*</span>
+      </div>
+
+      <div class="time-grid" id="timeGrid"></div>
+      <div class="error-msg" id="err-time" style="display:none; margin-top:8px" data-vi="Vui lòng chọn khung giờ" data-en="Please select a time slot">Vui lòng chọn khung giờ</div>
+
+      <button class="btn-submit" onclick="submitForm()">
+        <span data-vi="📅 Đặt lịch ngay" data-en="📅 Book Now">📅 Đặt lịch ngay</span>
+      </button>
+    </div>
+
+    <!-- CỘT PHẢI: SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- Khối 1: Thông tin liên hệ -->
+      <div class="salon-info-card">
+        <div class="salon-logo-box">
+          <img src="https://res.cloudinary.com/dpn19uqo2/image/upload/v1774165803/Logo_A_Vo%CC%80ong_hi%CC%80nh_%C4%91a%CC%A3i_die%CC%A3%CC%82n_apk3dx.png" alt="A Vòong Logo">
+        </div>
+        <div class="salon-info-content">
+          <h3 data-vi="TIỆM TÓC VOÒNG" data-en="A VÒONG HAIR SALON">TIỆM TÓC VOÒNG</h3>
+          <div class="salon-info-row">
+            <span class="icon">📞</span>
+            <span><span data-vi="Đường dây nóng" data-en="Hotline">Đường dây nóng</span> : <strong>0778.999.383</strong></span>
+          </div>
+          <div class="salon-info-row">
+            <span class="icon">🕐</span>
+            <span><span data-vi="Giờ mở cửa" data-en="Opening Hours">Giờ mở cửa</span> : <strong>9:00 – 20:00</strong></span>
+          </div>
+          <div class="salon-info-row">
+            <span class="icon">📍</span>
+            <span data-vi="11 Cây Keo, Tân Phú, TP.HCM" data-en="11 Cay Keo, Tan Phu, HCMC">11 Cây Keo, Tân Phú, TP.HCM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khối 2: Banner tagline -->
+      <div class="salon-banner">
+        <img src="https://res.cloudinary.com/dpn19uqo2/image/upload/v1774165816/logo_A_Vo%CC%80ong_ngang_czncbu.png" alt="A Vòong Hair Salon">
+      </div>
+
+      <!-- Khối 3: Mô tả thương hiệu -->
+      <div class="salon-desc-card">
+        <h3 data-vi="A VÒONG HAIR SALON — UY TÍN — CHUYÊN NGHIỆP — TẬN TÂM" data-en="A VÒONG HAIR SALON — TRUST — PROFESSIONAL — DEDICATION">A VÒONG HAIR SALON — UY TÍN — CHUYÊN NGHIỆP — TẬN TÂM</h3>
+        <div class="desc-item">
+          <p>
+            <strong data-vi="Uy Tín:" data-en="Trust:">Uy Tín:</strong>
+            <span data-vi=" A Vòong cam kết thực hiện đúng những gì đã hứa và luôn duy trì lời hứa với khách hàng, thông qua hành động nhất quán và minh bạch." data-en=" A Vòong commits to delivering on every promise through consistent and transparent actions."> A Vòong cam kết thực hiện đúng những gì đã hứa và luôn duy trì lời hứa với khách hàng, thông qua hành động nhất quán và minh bạch.</span>
+          </p>
+        </div>
+        <div class="desc-item">
+          <p>
+            <strong data-vi="Chất lượng:" data-en="Quality:">Chất lượng:</strong>
+            <span data-vi=" Cam kết mang lại chất lượng tốt nhất trong từng dịch vụ và sản phẩm." data-en=" Committed to delivering the highest quality in every service and product."> Cam kết mang lại chất lượng tốt nhất trong từng dịch vụ và sản phẩm.</span>
+          </p>
+        </div>
+        <div class="desc-item">
+          <p>
+            <strong data-vi="Tận Tâm:" data-en="Dedication:">Tận Tâm:</strong>
+            <span data-vi=" Tạo ra một môi trường làm việc và phục vụ tận tâm, với sự quan tâm đặc biệt đến nhu cầu của khách hàng." data-en=" Creating a dedicated environment with special attention to each client's individual needs."> Tạo ra một môi trường làm việc và phục vụ tận tâm, với sự quan tâm đặc biệt đến nhu cầu của khách hàng.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Khối 4: Google Map -->
+      <div class="map-card">
+        <div class="map-label">
+          <span>📍</span>
+          <span data-vi="Vị trí salon" data-en="Salon Location">Vị trí salon</span>
+        </div>
+        <iframe
+          class="map-frame"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.243479110613!2d106.62846007480264!3d10.776878089358703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752974a22e42d1%3A0x3cdfc534d534ba42!2sA%20Vo%C3%B2ng%20Hair%20Salon%20-%20Ch%C4%83m%20S%C3%B3c%20T%C3%B3c%20Chuy%C3%AAn%20Nghi%E1%BB%87p%20T%C3%A2n%20Ph%C3%BA!5e0!3m2!1svi!2svn!4v1711000000000!5m2!1svi!2svn"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <a class="btn-view-map" href="https://share.google/KyOq3wbGRAJKmlzVM" target="_blank">
+          🗺️ <span data-vi="Xem trên Google Maps" data-en="View on Google Maps">Xem trên Google Maps</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-check">✓</div>
+      <h2 data-vi="Đặt lịch thành công!" data-en="Booking Confirmed!">Đặt lịch thành công!</h2>
+      <p data-vi="Cảm ơn bạn đã tin tưởng A Vòong Hair Salon.<br>Salon sẽ gọi xác nhận trong vòng <strong>30 phút</strong>." data-en="Thank you for trusting A Vòong Hair Salon.<br>We will call to confirm within <strong>30 minutes</strong>.">Cảm ơn bạn đã tin tưởng A Vòong Hair Salon.<br>Salon sẽ gọi xác nhận trong vòng <strong>30 phút</strong>.</p>
+      <div class="modal-details">
+        <div class="modal-detail-row">
+          <span class="lbl" data-vi="Khách hàng" data-en="Customer">Khách hàng</span>
+          <span class="val" id="m-name"></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="lbl" data-vi="Điện thoại" data-en="Phone">Điện thoại</span>
+          <span class="val" id="m-phone"></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="lbl" data-vi="Chi nhánh" data-en="Branch">Chi nhánh</span>
+          <span class="val" data-vi="11 Cây Keo, Tân Phú" data-en="11 Cay Keo, Tan Phu">11 Cây Keo, Tân Phú</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="lbl" data-vi="Ngày hẹn" data-en="Date">Ngày hẹn</span>
+          <span class="val" id="m-date"></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="lbl" data-vi="Giờ hẹn" data-en="Time">Giờ hẹn</span>
+          <span class="val" id="m-time"></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="lbl" data-vi="Dịch vụ" data-en="Services">Dịch vụ</span>
+          <span class="val" id="m-service"></span>
+        </div>
+      </div>
+      <button class="btn-close-modal" onclick="closeModal()" data-vi="Đóng" data-en="Close">Đóng</button>
+    </div>
+  </div>
+
+  <script>
+    // ===== DATA =====
+    const serviceGroups = {
+      vi: {
+        'Cắt & Tạo kiểu': ['Cắt tóc nữ', 'Cắt tóc nam', 'Tạo kiểu'],
+        'Nhuộm tóc': ['Nhuộm màu thời trang', 'Nhuộm phủ bạc', 'Highlight'],
+        'Uốn & Duỗi': ['Uốn xoăn', 'Uốn sóng', 'Duỗi thẳng', 'Duỗi bóng'],
+        'Chăm sóc': ['Phục hồi tóc', 'Gội đầu massage', 'Hấp dầu'],
+        'Nối tóc': ['Nối tóc thật', 'Nối tóc nhân tạo']
+      },
+      en: {
+        'Cut & Style': ['Women\'s Cut', 'Men\'s Cut', 'Styling'],
+        'Hair Color': ['Fashion Color', 'Grey Coverage', 'Highlight'],
+        'Perm & Straight': ['Curly Perm', 'Wave Perm', 'Straightening', 'Smooth Straight'],
+        'Care': ['Hair Recovery', 'Head Massage', 'Deep Conditioning'],
+        'Hair Extension': ['Real Hair', 'Synthetic Hair']
+      }
+    }
+
+    const hours = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
+
+    let currentLang = 'vi'
+    let selectedTime = null
+    let serviceCount = 0
+
+    const today = new Date().toISOString().split('T')[0]
+    document.getElementById('bookDate').min = today
+
+    // ===== LANGUAGE =====
+    function setLang(lang) {
+      currentLang = lang
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active',
+          (lang === 'vi' && btn.textContent === 'VI') ||
+          (lang === 'en' && btn.textContent === 'EN')
+        )
+      })
+
+      document.querySelectorAll('[data-vi]').forEach(el => {
+        const text = el.getAttribute('data-' + lang)
+        if (text && el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && el.tagName !== 'OPTION') {
+          el.innerHTML = text
+        }
+      })
+
+      // Placeholders
+      document.querySelectorAll('[data-vi-ph]').forEach(el => {
+        el.placeholder = el.getAttribute('data-' + lang + '-ph') || el.placeholder
+      })
+
+      // Option texts
+      document.querySelectorAll('option[data-vi]').forEach(el => {
+        const text = el.getAttribute('data-' + lang)
+        if (text) el.textContent = text
+      })
+
+      renderTimeGrid()
+    }
+
+    // ===== TIME GRID =====
+    function renderTimeGrid() {
+      const grid = document.getElementById('timeGrid')
+      grid.innerHTML = ''
+      hours.forEach(h => {
+        const btn = document.createElement('button')
+        btn.className = 'time-btn' + (selectedTime === h ? ' selected' : '')
+        btn.innerText = h
+        btn.onclick = () => {
+          selectedTime = h
+          document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'))
+          btn.classList.add('selected')
+          document.getElementById('err-time').style.display = 'none'
+        }
+        grid.appendChild(btn)
+      })
+    }
+
+    // ===== COUNTER =====
+    function changeCount(dir) {
+      const inp = document.getElementById('guestCount')
+      let val = parseInt(inp.value) + dir
+      if (val < 1) val = 1
+      if (val > 10) val = 10
+      inp.value = val
+    }
+
+    // ===== SERVICE (2 cols only) =====
+    function addService() {
+      serviceCount++
+      const id = 'svc-' + serviceCount
+      const list = document.getElementById('serviceList')
+      const groups = serviceGroups[currentLang]
+
+      const entry = document.createElement('div')
+      entry.className = 'service-entry'
+      entry.id = id
+
+      let groupOpts = `<option value="">${currentLang === 'vi' ? 'Chọn nhóm dịch vụ' : 'Select service group'}</option>`
+      Object.keys(groups).forEach(g => {
+        groupOpts += `<option value="${g}">${g}</option>`
+      })
+
+      entry.innerHTML = `
+        <div class="service-entry-row">
+          <select onchange="updateServiceOptions(this, '${id}-svc')" id="${id}-group">
+            ${groupOpts}
+          </select>
+          <select id="${id}-svc">
+            <option value="">${currentLang === 'vi' ? 'Chọn dịch vụ' : 'Select service'}</option>
+          </select>
+          <button class="btn-remove-service" onclick="removeService('${id}')">×</button>
+        </div>
+      `
+      list.appendChild(entry)
+      document.getElementById('err-service').style.display = 'none'
+    }
+
+    function updateServiceOptions(groupSel, svcId) {
+      const group = groupSel.value
+      const groups = serviceGroups[currentLang]
+      const svcSel = document.getElementById(svcId)
+      svcSel.innerHTML = `<option value="">${currentLang === 'vi' ? 'Chọn dịch vụ' : 'Select service'}</option>`
+      if (group && groups[group]) {
+        groups[group].forEach(s => {
+          svcSel.innerHTML += `<option value="${s}">${s}</option>`
+        })
+      }
+    }
+
+    function removeService(id) {
+      const el = document.getElementById(id)
+      if (el) el.remove()
+    }
+
+    // ===== VALIDATE =====
+    function validate() {
+      let ok = true
+
+      const phone = document.getElementById('phone').value.trim()
+      const name = document.getElementById('name').value.trim()
+      const date = document.getElementById('bookDate').value
+      const services = document.querySelectorAll('.service-entry')
+
+      const check = (val, errId, inputId) => {
+        if (!val) {
+          document.getElementById(errId).style.display = 'block'
+          if (inputId) document.getElementById(inputId).classList.add('error')
+          ok = false
+        } else {
+          document.getElementById(errId).style.display = 'none'
+          if (inputId) document.getElementById(inputId).classList.remove('error')
+        }
+      }
+
+      check(phone, 'err-phone', 'phone')
+      check(name, 'err-name', 'name')
+      check(date, 'err-date', 'bookDate')
+
+      if (services.length === 0) {
+        document.getElementById('err-service').style.display = 'block'
+        ok = false
+      } else {
+        document.getElementById('err-service').style.display = 'none'
+      }
+
+      if (!selectedTime) {
+        document.getElementById('err-time').style.display = 'block'
+        ok = false
+      } else {
+        document.getElementById('err-time').style.display = 'none'
+      }
+
+      return ok
+    }
+
+    // ===== SUBMIT =====
+    function submitForm() {
+      if (!validate()) return
+
+      const name = document.getElementById('name').value.trim()
+      const phone = document.getElementById('phone').value.trim()
+      const date = document.getElementById('bookDate').value
+      const dateFormatted = new Date(date).toLocaleDateString(currentLang === 'vi' ? 'vi-VN' : 'en-GB')
+
+      const svcEntries = document.querySelectorAll('.service-entry')
+      let svcList = []
+      svcEntries.forEach(entry => {
+        const selects = entry.querySelectorAll('select')
+        const svc = selects[1]?.value
+        if (svc && svc !== '') svcList.push(svc)
+        else if (selects[0]?.value) svcList.push(selects[0].value)
+      })
+
+      document.getElementById('m-name').innerText = name
+      document.getElementById('m-phone').innerText = phone
+      document.getElementById('m-date').innerText = dateFormatted
+      document.getElementById('m-time').innerText = selectedTime
+      document.getElementById('m-service').innerText = svcList.length
+        ? svcList.join(', ')
+        : (currentLang === 'vi' ? 'Chưa chọn' : 'Not selected')
+
+      document.getElementById('modalOverlay').classList.add('show')
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('show')
+    }
+
+    // ===== INIT =====
+    renderTimeGrid()
+    addService()
+  </script>
+</body>
+</html>
